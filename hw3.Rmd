@@ -88,18 +88,11 @@ agg_demand <- demand_agg(price) %>%
 
 agg_demand[agg_demand == 0] <- NA
 
-supply <- agg_demand %>% 
-  select(demand, quantity_d) %>% 
-  filter(demand == '.') %>% 
-  mutate(supply = 0.1 * quantity_d)
-
 
 ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
   theme_minimal()
 
-ggplot(supply) +
-  geom_line(aes(x = quantity_d, y = supply))  
 ```
 
 
