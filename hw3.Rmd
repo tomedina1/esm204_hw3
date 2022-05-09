@@ -71,7 +71,7 @@ mec <- function(q, p){
   return(p_kwh)
 }
 
-round(mec(0.85, 51), 4)
+mec <- round(mec(0.85, 51), 4) * 100
 ```
 
 # 2
@@ -104,6 +104,8 @@ supply <- 10 / q_eq
 ggplotly(ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
   geom_abline(slope = supply) +
+  geom_hline(yintercept = mec) +
+  geom_abline(slope = supply, intercept = mec) +
   theme_minimal() +
   labs(x = "Quantity Demanded (kwh)", y = "Price"))
 ```
