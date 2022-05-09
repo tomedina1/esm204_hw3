@@ -60,6 +60,13 @@ ps <- function(price){
   
   return(ps)
 }
+
+eq_p_q <- function(m1, m2, b1, b2){
+  q_star <- (b2 - b1) / (m1 - m2)
+  p_star <- m1 * q_star + b1
+  vector <- c(q_star, p_star)
+  return(vector)
+}
 ```
 
 Important values:
@@ -137,4 +144,10 @@ cs_low_perc <- cs_low/cs_agg *100
 
 The high income consumers receive 84.6% of the total consumer benefit, while the low income consumers receive 15.3% of the total consumer benefit 
 >>>>>>> 64df1c1cbef6264ed6e90166a5b28ec033abf87e
+
+# 4
+
+```{r}
+eq <- eq_p_q(demand.lm$coefficients[2], supply, demand.lm$coefficients[1], mec)
+```
 
