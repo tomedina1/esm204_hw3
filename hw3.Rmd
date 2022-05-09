@@ -124,3 +124,5 @@ cs_agg <- cs_agg(10)
 ps <- ps(10)
 env_cost <-q_eq*mec
 ```
+
+
