@@ -50,7 +50,7 @@ cs <- function(price, model) {
 
 # aggregate consumer surplus
 cs_agg <- function(price){
-  cs <- cs(price, low.model) + cs(price, model.high)
+  cs <- cs(price, high.model) + cs(price, low.model)
   return(cs)
 }
 
