@@ -44,7 +44,7 @@ demand_agg <- function(price) {
 # calculate consumer surplus
 cs <- function(price, model) {
   q <- demand(price, model)
-  cs <- 0.5 * (model$coefficients[[1]]) / model
+  cs <- 0.5 * (model$coefficients[[1]] - price) / q
   return(cs)
 }
 
@@ -53,6 +53,8 @@ cs_agg <- function(price){
   cs <- cs(price, low.model) + cs(price, model.high)
   return(cs)
 }
+
+
 ```
 
 Important values:
