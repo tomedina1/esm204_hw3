@@ -91,7 +91,8 @@ agg_demand[agg_demand == 0] <- NA
 
 ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
-  theme_minimal()
+  theme_minimal() +
+  labs(x = "Quantity Demanded (kwh)", y = "Price")
 
 ```
 
