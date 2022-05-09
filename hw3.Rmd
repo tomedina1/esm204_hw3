@@ -1,0 +1,105 @@
+---
+title: "ESM 204 HW 3"
+author: "Taylor Medina"
+date: '2022-05-04'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+
+options(scipen = 999)
+```
+
+# Setup 
+```{r}
+# read in the data
+data <- read_csv(here('data/HW3_data.csv')) %>% 
+  select(!1) 
+
+# perform a linear fit
+low.model <- lm(Price_Cents ~ Q_Low_Kwh, data)
+high.model <- lm(Price_Cents ~ Q_High_Kwh, data)
+```
+
+Functions that will be used throughout the assignment
+```{r}
+# convert price to demand
+demand <- function(price, model) {
+  q <- (price - model$coefficients[[1]]) / model$coefficients[[2]]
+  q <- ifelse(q < 0, 0, q)
+  return(q)
+}
+
+# calculate aggregate demand
+demand_agg <- function(price) {
+  q <- demand(price, low.model) + demand(price, high.model)
+  return(q)
+}
+
+# calculate consumer surplus
+cs <- function(price, model) {
+  q <- demand(price, model)
+  cs <- 0.5 * (model$coefficients[[1]]) / model
+  return(cs)
+}
+
+# aggregate consumer surplus
+cs_agg <- function(price){
+  cs <- cs(price, low.model) + cs(price, model.high)
+  return(cs)
+}
+```
+
+Important values:
+
+Social Cost of Carbon (SCC): $51/tonne
+
+Price/kWh: $0.10
+
+## 1
+
+```{r}
+# function that converts quantity in lbs to metric tons and returns mec
+mec <- function(q, p){
+  q_ton <- q / 2204.62
+  p_kwh <- q_ton * p
+  return(p_kwh)
+}
+
+round(mec(0.85, 51), 4)
+```
+
+# 2
+
+```{r}
+price <- seq(0, 40, length.out = 100)
+agg_demand <- demand_agg(price) %>% 
+  as.data.frame() %>% 
+  cbind(price) %>% 
+  mutate(demand.low = demand(price, low.model),
+         demand.high = demand(price, high.model)) %>% 
+  pivot_longer(c(., demand.low, demand.high),
+               names_to = 'demand',
+               values_to = 'quantity_d') 
+
+agg_demand[agg_demand == 0] <- NA
+
+supply <- agg_demand %>% 
+  select(demand, quantity_d) %>% 
+  filter(demand == '.') %>% 
+  mutate(supply = 0.1 * quantity_d)
+
+
+ggplot(agg_demand) +
+  geom_line(aes(x = quantity_d, y = price, color = demand)) +
+  theme_minimal()
+
+ggplot(supply) +
+  geom_line(aes(x = quantity_d, y = supply))  
+```
+
+
