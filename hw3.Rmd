@@ -95,13 +95,17 @@ agg_demand.lm <- agg_demand %>%
 
 demand.lm <- lm(price ~ quantity_d, data = agg_demand.lm)
 
+# calculating equilibrium quantity
+q_eq <- (10 - demand.lm$coefficients[1]) / demand.lm$coefficients[2]
+
+# slope of supply curve
+supply <- 10 / q_eq
+
 ggplotly(ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
+  geom_abline(slope = supply) +
   theme_minimal() +
   labs(x = "Quantity Demanded (kwh)", y = "Price"))
-
-
-  
 ```
 
 
