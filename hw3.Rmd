@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(here)
+library(plotly)
 
 options(scipen = 999)
 ```
@@ -88,12 +89,19 @@ agg_demand <- demand_agg(price) %>%
 
 agg_demand[agg_demand == 0] <- NA
 
+# lm for agg demand 
+agg_demand.lm <- agg_demand %>% 
+  filter(quantity_d > 30000, demand == '.')
 
-ggplot(agg_demand) +
+demand.lm <- lm(price ~ quantity_d, data = agg_demand.lm)
+
+ggplotly(ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
   theme_minimal() +
-  labs(x = "Quantity Demanded (kwh)", y = "Price")
+  labs(x = "Quantity Demanded (kwh)", y = "Price"))
 
+
+  
 ```
 
 
