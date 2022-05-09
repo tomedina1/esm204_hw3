@@ -117,4 +117,10 @@ ggplotly(ggplot(agg_demand) +
   labs(x = "Quantity Demanded (kwh)", y = "Price"))
 ```
 
-
+```{r}
+cs_low <- cs(10, low.model)
+cs_high <- cs(10, high.model)
+cs_agg <- cs_agg(10)
+ps <- ps(10)
+env_cost <-q_eq*mec
+```
