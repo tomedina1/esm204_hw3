@@ -143,7 +143,7 @@ cs_low_perc <- cs_low/cs_agg *100
 ```
 
 The high income consumers receive 84.6% of the total consumer benefit, while the low income consumers receive 15.3% of the total consumer benefit 
->>>>>>> 64df1c1cbef6264ed6e90166a5b28ec033abf87e
+
 
 # 4
 
