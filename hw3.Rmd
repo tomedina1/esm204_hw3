@@ -1,12 +1,12 @@
 ---
 title: "ESM 204 HW 3"
-author: "Taylor Medina"
+author: "Savana Gonzales, Ali Martin, Taylor Medina"
 date: '2022-05-04'
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = TRUE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
@@ -55,7 +55,7 @@ cs_agg <- function(price){
 }
 
 # producer surplus
-ps <- function(price){
+ps <- function(price, q_eq){
   ps <- 0.5 * 10 * q_eq
   
   return(ps)
@@ -128,22 +128,19 @@ ggplotly(ggplot(agg_demand) +
 cs_low <- cs(10, low.model)
 cs_high <- cs(10, high.model)
 cs_agg <- cs_agg(10)
-ps <- ps(10)
-env_cost <-q_eq*mec
+ps <- ps(10, q_eq)
+env_cost <- q_eq * mec
 ```
 
-<<<<<<< HEAD
-=======
 ## 3
 
 ```{r}
 cs_high_perc <- cs_high/cs_agg *100
 cs_low_perc <- cs_low/cs_agg *100
-
 ```
 
 The high income consumers receive 84.6% of the total consumer benefit, while the low income consumers receive 15.3% of the total consumer benefit 
->>>>>>> 64df1c1cbef6264ed6e90166a5b28ec033abf87e
+
 
 # 4
 
