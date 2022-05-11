@@ -120,9 +120,9 @@ q_eq <- (10 - demand.lm$coefficients[1]) / demand.lm$coefficients[2]
 supply <- 10 / q_eq
 
 ggplot(agg_demand) +
-  geom_line(aes(x = quantity_d, y = price, color = demand)) +
+  geom_line(aes(x = quantity_d, y = price, color = demand))+
   geom_abline(slope = supply) +
-  geom_hline(yintercept = mec) +
+  geom_hline(yintercept = mec_1) +
   theme_minimal() +
   labs(x = "Quantity Demanded (kwh)", y = "Price")
 ```
@@ -132,7 +132,7 @@ cs_low <- cs(10, low.model)
 cs_high <- cs(10, high.model)
 cs_aggr <- cs_agg(10)
 p_s <- ps(10, q_eq)
-env_cost <- q_eq * mec
+env_cost <- q_eq * mec_1
 ```
 
 - The consumer surplus of the low consumers is `r round(cs_low,2)` cents.
@@ -160,7 +160,7 @@ The high income consumers receive 84.6% of the total consumer benefit, while the
 
 ```{r}
 # make new demand curve under the tax
-new_agg_demand <- demand_agg(price, mec) %>%
+new_agg_demand <- demand_agg(price, mec_1) %>%
   as.data.frame() %>% 
   cbind(price) 
 
@@ -177,9 +177,9 @@ new_aggd.lm <- new_agg_demand %>%
 lm.new_demand <- lm(price ~ ., data = new_aggd.lm)
 
 new_eq <- eq_p_q(supply, lm.new_demand$coefficients[2], 0, lm.new_demand$coefficients[1])
-e_damage_tax <- new_eq[1] * mec
-cs_high_tax <- cs(new_eq[2] + mec, model = high.model)
-cs_low_tax <- cs(new_eq[2] + mec, model = low.model) - e_damage_tax
+e_damage_tax <- new_eq[1] * mec_1
+cs_high_tax <- cs(new_eq[2] + mec_1, model = high.model)
+cs_low_tax <- cs(new_eq[2] + mec_1, model = low.model) - e_damage_tax
 ps_tax <- ps(new_eq[2], new_eq[1])
 tax_revenue <- e_damage_tax
 ```
@@ -236,5 +236,9 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
 
 ```{r}
 mec_75 <- mec_change(price, 75, q_eq, high_prop, low_prop)
+mec_100 <- mec_change(price, 100, q_eq, high_prop, low_prop)
+mec_125 <- mec_change(price, 125, q_eq, high_prop, low_prop)
+mec_150 <- mec_change(price, 150, q_eq, high_prop, low_prop)
+rbind(mec_1, mec_75, mec_100, mec_125, mec_150)
 ```
 
