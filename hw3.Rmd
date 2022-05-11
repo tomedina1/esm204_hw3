@@ -235,6 +235,6 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
 ```
 
 ```{r}
-mec_75 <- mec_change(10, 75, q_eq, high_prop, low_prop)
+mec_75 <- mec_change(price, 75, q_eq, high_prop, low_prop)
 ```
 
