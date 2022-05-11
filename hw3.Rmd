@@ -160,6 +160,7 @@ The high income consumers receive 84.6% of the total consumer benefit, while the
 
 a)
 ```{r}
+# make new demand curve under the tax
 new_agg_demand <- demand_agg(price, mec) %>%
   as.data.frame() %>% 
   cbind(price) 
@@ -171,6 +172,28 @@ ggplot(new_agg_demand) +
   geom_line(aes(x = ., y = price)) +
   geom_abline(slope = supply) +
   theme_minimal()
+
+## find intercept of aggregate demand curve and supply
+
+## make supply function
+supply <- function(p){
+  q <- p/slope
+  return(q)
+}
+
+## define demand function with the tax
+
+demand_t <- function(p, model){
+  q <- (p - (model$coefficients[[1]]-1.97))/model$coefficients[[2]]
+  q<- ifelse(q<0,0,q)
+  return(q)
+}
+
+## now make the aggregate demand function with tax
+demand_agg_t <- function(p){
+  q <- demand_t(p, low.model)
+}
+
 ```
 
 b)
