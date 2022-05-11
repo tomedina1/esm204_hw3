@@ -206,5 +206,6 @@ low_prop <- 1 - high_prop
 ```{r}
 high_welfare <- (cs_high_tax + high_prop*tax_revenue)/100
 low_welfare <- (cs_low_tax + low_prop*tax_revenue)/100
+ps_welfare <- ps_tax / 100
 ```
 
