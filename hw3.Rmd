@@ -167,33 +167,19 @@ new_agg_demand <- demand_agg(price, mec) %>%
 
 new_agg_demand[new_agg_demand == 0] <- NA
   
-
 ggplot(new_agg_demand) +
   geom_line(aes(x = ., y = price)) +
   geom_abline(slope = supply) +
   theme_minimal()
 
-## find intercept of aggregate demand curve and supply
+new_aggd.lm <- new_agg_demand %>% 
+  filter(. > 250000)
 
-## make supply function
-supply <- function(p){
-  q <- p/slope
-  return(q)
-}
+lm.new_demand <- lm(price ~ ., data = new_aggd.lm)
 
-## define demand function with the tax
+new_eq <- eq_p_q(supply, lm.new_demand$coefficients[2], 0, lm.new_demand$coefficients[1])
 
-demand_t <- function(p, model){
-  q <- (p - (model$coefficients[[1]]-1.97))/model$coefficients[[2]]
-  q<- ifelse(q<0,0,q)
-  return(q)
-}
 
-## now make the aggregate demand function with tax
-demand_agg_t <- function(p){
-  q <- demand_t(p, low.model) + demand_t(p, high.model)
-  return(q)
-}
 
 # make new intercept 
 
