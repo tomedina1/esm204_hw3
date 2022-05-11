@@ -83,13 +83,13 @@ Price/kWh: $0.10
 # function that converts quantity in lbs to metric tons and returns mec
 mec <- function(q, p){
   q_ton <- q / 2204.62
-  p_kwh <- q_ton * p
+  p_kwh <- q_ton * p * 100
   return(p_kwh)
 }
 
-mec <- round(mec(0.85, 51), 4) * 100
+mec_1 <- round(mec(0.85, 51), 4) 
 
-mec
+mec_1
 ```
 
 # 2
@@ -207,5 +207,34 @@ low_prop <- 1 - high_prop
 high_welfare <- (cs_high_tax + high_prop*tax_revenue)/100
 low_welfare <- (cs_low_tax + low_prop*tax_revenue)/100
 ps_welfare <- ps_tax / 100
+```
+
+```{r}
+mec_change <- function(price, scc, quantity, high_prop, low_prop){
+  mec_new <- mec(0.85, scc)
+  agg_demand_new <- demand_agg(price, mec_new) %>% 
+      as.data.frame() %>% 
+      cbind(price) 
+  
+  lm.agg <- agg_demand_new %>% 
+    filter(. > 250000)
+  
+  lm.final <- lm(price ~ ., data = lm.agg)
+  new_eq <- eq_p_q(lm.final$coefficients[2], supply, lm.final$coefficients[1], 0)
+  tax_revenue <- new_eq[1] * mec_new
+  cs_high <- cs(new_eq[2] + mec_new, model = high.model)
+  cs_low <- cs(new_eq[2] + mec_new, model = low.model) - tax_revenue
+  
+  high_welfare <- (cs_high + high_prop * tax_revenue) / 100
+  low_welfare <- (cs_low + low_prop * tax_revenue) / 100
+  ps_welfare <- ps(new_eq[2], new_eq[1])
+  
+  vector <- c(scc, high_welfare, low_welfare, ps_welfare)
+  return(vector)
+}
+```
+
+```{r}
+mec_75 <- mec_change(10, 75, q_eq, high_prop, low_prop)
 ```
 
