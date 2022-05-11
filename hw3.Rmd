@@ -191,7 +191,8 @@ demand_t <- function(p, model){
 
 ## now make the aggregate demand function with tax
 demand_agg_t <- function(p){
-  q <- demand_t(p, low.model)
+  q <- demand_t(p, low.model) + demand_t(p, high.model)
+  return(q)
 }
 
 ```
