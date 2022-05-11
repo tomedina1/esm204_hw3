@@ -197,3 +197,14 @@ e) The producer surplus is `r ps_tax` cents.
 
 
 # 5
+```{r}
+high_prop <- demand(10, high.model)/(demand(10, high.model)+ demand(10, low.model))
+
+low_prop <- 1 - high_prop
+```
+
+```{r}
+high_welfare <- (cs_high_tax + high_prop*tax_revenue)/100
+low_welfare <- (cs_low_tax + low_prop*tax_revenue)/100
+```
+
