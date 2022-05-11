@@ -58,7 +58,7 @@ cs_agg <- function(price){
 
 # producer surplus
 ps <- function(price, q_eq){
-  ps <- 0.5 * 10 * q_eq
+  ps <- 0.5 * price * q_eq
   
   return(ps)
 }
