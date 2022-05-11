@@ -2,7 +2,9 @@
 title: "ESM 204 HW 3"
 author: "Savana Gonzales, Ali Martin, Taylor Medina"
 date: '2022-05-04'
-output: html_document
+output: 
+  html_document:
+      code_folding: hide
 ---
 
 ```{r setup, include = TRUE, warning = FALSE, message = FALSE}
@@ -10,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
-library(plotly)
 
 options(scipen = 999)
 ```
@@ -86,6 +87,8 @@ mec <- function(q, p){
 }
 
 mec <- round(mec(0.85, 51), 4) * 100
+
+mec
 ```
 
 # 2
@@ -115,28 +118,38 @@ q_eq <- (10 - demand.lm$coefficients[1]) / demand.lm$coefficients[2]
 # slope of supply curve
 supply <- 10 / q_eq
 
-ggplotly(ggplot(agg_demand) +
+ggplot(agg_demand) +
   geom_line(aes(x = quantity_d, y = price, color = demand)) +
   geom_abline(slope = supply) +
   geom_hline(yintercept = mec) +
-  geom_abline(slope = supply, intercept = mec) +
   theme_minimal() +
-  labs(x = "Quantity Demanded (kwh)", y = "Price"))
+  labs(x = "Quantity Demanded (kwh)", y = "Price")
 ```
 
 ```{r}
 cs_low <- cs(10, low.model)
 cs_high <- cs(10, high.model)
-cs_agg <- cs_agg(10)
-ps <- ps(10, q_eq)
+cs_aggr <- cs_agg(10)
+p_s <- ps(10, q_eq)
 env_cost <- q_eq * mec
 ```
+
+- The consumer surplus of the low consumers is $`r round(cs_low,2)`.
+
+- The consumer surplus of the high consumers is $`r round(cs_high, 2)`.
+
+- The total benefit is $`r round(cs_aggr, 2)`.
+
+- The producer surplus is $`r round(p_s, 2)`.
+
+- The environmental cost under the status quo is $`r round(env_cost, 2)`.
+
 
 ## 3
 
 ```{r}
-cs_high_perc <- cs_high/cs_agg *100
-cs_low_perc <- cs_low/cs_agg *100
+cs_high_perc <- cs_high/cs_aggr *100
+cs_low_perc <- cs_low/cs_aggr *100
 ```
 
 The high income consumers receive 84.6% of the total consumer benefit, while the low income consumers receive 15.3% of the total consumer benefit 
@@ -144,7 +157,13 @@ The high income consumers receive 84.6% of the total consumer benefit, while the
 
 # 4
 
+a)
 ```{r}
 eq <- eq_p_q(demand.lm$coefficients[2], supply, demand.lm$coefficients[1], mec)
 ```
 
+b)
+
+c)
+
+d)
