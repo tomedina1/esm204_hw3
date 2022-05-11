@@ -37,8 +37,9 @@ demand <- function(price, model) {
 }
 
 # calculate aggregate demand
-demand_agg <- function(price) {
-  q <- demand(price, low.model) + demand(price, high.model)
+demand_agg <- function(price, tax) {
+  new_price <- price + tax
+  q <- demand(new_price, low.model) + demand(price, high.model)
   return(q)
 }
 
@@ -95,7 +96,7 @@ mec
 
 ```{r}
 price <- seq(0, 40, length.out = 100)
-agg_demand <- demand_agg(price) %>% 
+agg_demand <- demand_agg(price, 0) %>% 
   as.data.frame() %>% 
   cbind(price) %>% 
   mutate(demand.low = demand(price, low.model),
@@ -159,7 +160,17 @@ The high income consumers receive 84.6% of the total consumer benefit, while the
 
 a)
 ```{r}
-eq <- eq_p_q(demand.lm$coefficients[2], supply, demand.lm$coefficients[1], mec)
+new_agg_demand <- demand_agg(price, mec) %>%
+  as.data.frame() %>% 
+  cbind(price) 
+
+new_agg_demand[new_agg_demand == 0] <- NA
+  
+
+ggplot(new_agg_demand) +
+  geom_line(aes(x = ., y = price)) +
+  geom_abline(slope = supply) +
+  theme_minimal()
 ```
 
 b)
