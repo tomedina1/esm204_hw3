@@ -187,11 +187,29 @@ tax_revenue <- e_damage_tax
 
 a) The amount of electricity produced and consumed is `r new_eq[1]` kWh
 
+<<<<<<< HEAD
 b) The price of electricity is `r new_eq[2]` cents.
 
 c) The overall welfare of high consumers is `r cs_high_tax` cents.
 
 d) The overall welfare of low consumers is `r cs_low_tax` cents.
+=======
+# make new intercept 
+
+new_intercept<- uniroot(function(p)
+  demand_agg_t(p) - supply(p),
+  interval = c(0,40))
+
+## make new demand lm
+agg_demand.lm <- new_agg_demand %>% 
+  filter(quantity_d > 30000, demand == '.')
+
+demand_tax_lm <- lm(price ~ ., data = new_agg_demand)
+
+
+
+```
+>>>>>>> 73f567f940bfe7ed26c8a628a6588ee07fc41a07
 
 e) The producer surplus is `r ps_tax` cents.
 
