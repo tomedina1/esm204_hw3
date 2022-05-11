@@ -195,6 +195,20 @@ demand_agg_t <- function(p){
   return(q)
 }
 
+# make new intercept 
+
+new_intercept<- uniroot(function(p)
+  demand_agg_t(p) - supply(p),
+  interval = c(0,40))
+
+## make new demand lm
+agg_demand.lm <- new_agg_demand %>% 
+  filter(quantity_d > 30000, demand == '.')
+
+demand_tax_lm <- lm(price ~ ., data = new_agg_demand)
+
+
+
 ```
 
 b)
