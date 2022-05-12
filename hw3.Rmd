@@ -250,6 +250,8 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
 }
 ```
 
+**Figure 3:** The above table shows the overall welfare for high income consumers, low income consumers, and electricity producers through the implementation of the tax. 
+
 ```{r}
 mec_51 <- mec_change(price, 51, q_eq, high_prop, low_prop)
 mec_75 <- mec_change(price, 75, q_eq, high_prop, low_prop)
