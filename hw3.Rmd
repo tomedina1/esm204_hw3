@@ -248,3 +248,38 @@ mec_final %>%
   kable_styling(bootstrap_options = c('hover', 'striped'))
 ```
 
+#6
+```{r}
+# demand after tax and cut in half
+demand_solar <- function(price, model) {
+  q <- (price - (0.5*model$coefficients[[1]])) / model$coefficients[[2]]
+  q <- ifelse(q < 0, 0, q)
+  return(q)
+}
+
+# calculate aggregate demand after tax and cut in half
+demand_agg_solar <- function(price, tax) {
+  new_price <- price + tax
+  q <- demand_solar(new_price, low.model) + demand(price, high.model)
+  return(q)
+}
+
+#new demand curve and slope
+solar_agg <- demand_agg_solar(price, mec_1) %>%
+  as.data.frame() %>% 
+  cbind(price) 
+
+solar_agg[solar_agg == 0] <- NA
+
+ggplot(solar_agg) +
+  geom_line(aes(x = ., y = price)) +
+  geom_abline(slope = supply) +
+  theme_minimal()
+
+solar_aggd.lm <- solar_agg %>% 
+  filter(. > 420000)
+
+lm.demand_agg_solar <- lm(price ~ ., data = solar_aggd.lm)
+
+```
+
