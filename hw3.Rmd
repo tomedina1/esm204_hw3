@@ -3,8 +3,9 @@ title: "ESM 204 HW 3"
 author: "Savana Gonzales, Ali Martin, Taylor Medina"
 date: '2022-05-04'
 output: 
-  html_document:
-      code_folding: hide
+  html_document: 
+    code_folding: show
+    theme: journal
 ---
 
 ```{r setup, include = TRUE, warning = FALSE, message = FALSE}
@@ -12,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
-library(kableExtra)
 
 options(scipen = 999)
 ```
@@ -121,11 +121,15 @@ q_eq <- (10 - demand.lm$coefficients[1]) / demand.lm$coefficients[2]
 supply <- 10 / q_eq
 
 ggplot(agg_demand) +
-  geom_line(aes(x = quantity_d, y = price, color = demand))+
+  geom_line(aes(x = quantity_d, y = price, color = demand, linetype = demand))+
   geom_abline(slope = supply) +
-  geom_hline(yintercept = mec_1) +
+  geom_hline(yintercept = mec_1, linetype = 'dashed') +
+  geom_text(aes(800000, 17, label = 'supply')) +
+  geom_text(aes(0, 3, label = 'MEC')) +
+  scale_color_discrete(name = "Demand", labels = c("Aggregate", "High Income", "Low Income")) +
+  guides(linetype = FALSE) +
   theme_minimal() +
-  labs(x = "Quantity Demanded (kwh)", y = "Price")
+  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)")
 ```
 
 ```{r}
@@ -136,13 +140,13 @@ p_s <- ps(10, q_eq)
 env_cost <- q_eq * mec_1
 ```
 
-- The consumer surplus of the low consumers is `r round(cs_low,2)` cents.
+- The consumer surplus of the low consumers is $`r round(cs_low,2)/ 100`.
 
-- The consumer surplus of the high consumers is `r round(cs_high, 2)` cents.
+- The consumer surplus of the high consumers is $`r round(cs_high, 2) / 100`.
 
-- The total benefit is `r round(cs_aggr, 2)` cents
+- The total benefit is $`r round(cs_aggr, 2) / 100`.
 
-- The producer surplus is `r round(p_s, 2)` cents
+- The producer surplus is $`r round(p_s, 2)` cents
 
 - The environmental cost under the status quo is `r round(env_cost, 2)` cents.
 
@@ -163,19 +167,28 @@ The high income consumers receive 84.6% of the total consumer benefit, while the
 # make new demand curve under the tax
 new_agg_demand <- demand_agg(price, mec_1) %>%
   as.data.frame() %>% 
-  cbind(price) 
+  cbind(price) %>% 
+  mutate(demand.low = demand(price + mec_1, low.model),
+         demand.high = demand(price, high.model)) %>% 
+  pivot_longer(c(., demand.low, demand.high),
+               names_to = 'demand',
+               values_to = 'quantity_d') 
 
 new_agg_demand[new_agg_demand == 0] <- NA
   
 ggplot(new_agg_demand) +
-  geom_line(aes(x = ., y = price)) +
+  geom_line(aes(x = quantity_d, y = price, color = demand, linetype = demand)) +
   geom_abline(slope = supply) +
-  theme_minimal()
+  geom_text(aes(800000, 17, label = 'supply')) +
+  scale_color_discrete(name = "Demand", labels = c("Aggregate", "High Income", "Low Income")) +
+  guides(linetype = FALSE) +
+  theme_minimal() +
+  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)")
 
 new_aggd.lm <- new_agg_demand %>% 
-  filter(. > 250000)
+  filter(quantity_d > 30000, demand == '.')
 
-lm.new_demand <- lm(price ~ ., data = new_aggd.lm)
+lm.new_demand <- lm(price ~ quantity_d, data = new_aggd.lm)
 
 new_eq <- eq_p_q(supply, lm.new_demand$coefficients[2], 0, lm.new_demand$coefficients[1])
 e_damage_tax <- new_eq[1] * mec_1
@@ -188,13 +201,13 @@ tax_revenue <- e_damage_tax
 
 a) The amount of electricity produced and consumed is `r new_eq[1]` kWh
 
-b) The price of electricity is `r new_eq[2]` cents.
+b) The price of electricity is $`r round(new_eq[2] / 100, 2)`.
 
-c) The overall welfare of high consumers is `r cs_high_tax` cents.
+c) The overall welfare of high consumers is $`r round(cs_high_tax / 100, 2)`.
 
-d) The overall welfare of low consumers is `r cs_low_tax` cents.
+d) The overall welfare of low consumers is $`r round(cs_low_tax / 100, 2)`.
 
-e) The producer surplus is `r ps_tax` cents.
+e) The producer surplus is $`r round(ps_tax / 100, 2)`.
 
 
 # 5
@@ -202,12 +215,6 @@ e) The producer surplus is `r ps_tax` cents.
 high_prop <- demand(10, high.model)/(demand(10, high.model)+ demand(10, low.model))
 
 low_prop <- 1 - high_prop
-```
-
-```{r}
-high_welfare <- (cs_high_tax + high_prop*tax_revenue)/100
-low_welfare <- (cs_low_tax + low_prop*tax_revenue)/100
-ps_welfare <- ps_tax / 100
 ```
 
 ```{r}
@@ -241,45 +248,56 @@ mec_75 <- mec_change(price, 75, q_eq, high_prop, low_prop)
 mec_100 <- mec_change(price, 100, q_eq, high_prop, low_prop)
 mec_125 <- mec_change(price, 125, q_eq, high_prop, low_prop)
 mec_150 <- mec_change(price, 150, q_eq, high_prop, low_prop)
-mec_final <- rbind(mec_51, mec_75, mec_100, mec_125, mec_150)
+mec_final <- rbind(mec_51, mec_75, mec_100, mec_125, mec_150) %>% 
+  as_tibble(rownames = NULL) 
 
-mec_final %>% 
-  kable(col.names = c('SCC ($/lb)', 'Welfare High Consumer ($)', 'Welfare Low Consumer ($)', 'Producer Welfare ($)')) %>% 
-  kable_styling(bootstrap_options = c('hover', 'striped'))
+colnames(mec_final) <- c('SCC ($/tonne)', 'High Income Benefit ($)', 'Low Income Benefit ($)', 'Producer Surplus ($)')
+mec_final
 ```
 
 #6
 ```{r}
-# demand after tax and cut in half
-demand_solar <- function(price, model) {
-  q <- (price - (0.5*model$coefficients[[1]])) / model$coefficients[[2]]
-  q <- ifelse(q < 0, 0, q)
-  return(q)
-}
-
 # calculate aggregate demand after tax and cut in half
 demand_agg_solar <- function(price, tax) {
-  new_price <- price + tax
-  q <- demand_solar(new_price, low.model) + demand(price, high.model)
+  q <- demand(price, low.model) + demand(price, high.model) / 2
   return(q)
 }
 
 #new demand curve and slope
 solar_agg <- demand_agg_solar(price, mec_1) %>%
   as.data.frame() %>% 
-  cbind(price) 
+  cbind(price) %>% 
+  mutate(demand.low = demand(price, low.model),
+         demand.high = demand(price, high.model) / 2) %>% 
+  pivot_longer(c(., demand.low, demand.high),
+               names_to = 'demand',
+               values_to = 'quantity_d') 
+
 
 solar_agg[solar_agg == 0] <- NA
 
 ggplot(solar_agg) +
-  geom_line(aes(x = ., y = price)) +
+  geom_line(aes(x = quantity_d, y = price, color = demand, linetype = demand)) +
+  geom_text(aes(800000, 17, label = 'supply')) +
+  geom_text(aes(0, 3, label = 'MEC')) +
   geom_abline(slope = supply) +
-  theme_minimal()
+  geom_hline(yintercept = mec_1, linetype = 'dashed') +
+  scale_color_discrete(name = "Demand", labels = c("Aggregate", "High Income", "Low Income")) +
+  guides(linetype = FALSE) +
+  theme_minimal() +
+  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)")
 
-solar_aggd.lm <- solar_agg %>% 
-  filter(. > 420000)
+solar_aggd.lm <- solar_agg %>%
+  filter(quantity_d > 30000, demand == '.')
 
-lm.demand_agg_solar <- lm(price ~ ., data = solar_aggd.lm)
+lm.demand_agg_solar <- lm(price ~ quantity_d, data = solar_aggd.lm)
 
+solar_eq <- eq_p_q(lm.demand_agg_solar$coefficients[2], supply, lm.demand_agg_solar$coefficients[1], 0)
+env_ext <- mec_1 * solar_eq[1]
 ```
 
+a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
+
+b) The total environmental externality is $`r round(env_ext / 100, 2)`.
+
+c) 
