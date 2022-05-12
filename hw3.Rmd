@@ -295,10 +295,13 @@ lm.demand_agg_solar <- lm(price ~ quantity_d, data = solar_aggd.lm)
 solar_eq <- eq_p_q(lm.demand_agg_solar$coefficients[2], supply, lm.demand_agg_solar$coefficients[1], 0)
 env_ext <- mec_1 * solar_eq[1]
 
+## tax with solar panels
+tax_solar <- (mec_1/(env_ext/e_damage_tax))
+
 ```
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
 
 b) The total environmental externality is $`r round(env_ext / 100, 2)`.
 
-c) 
+c) The optimal tax to decrease environmental damage with solar panels is $ `r round(tax_solar, 2)`
