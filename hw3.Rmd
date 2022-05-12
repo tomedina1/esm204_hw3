@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
+library(kableExtra)
 
 options(scipen = 999)
 ```
@@ -217,7 +218,7 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
       cbind(price) 
   
   lm.agg <- agg_demand_new %>% 
-    filter(. > 250000)
+    filter(. > 300000)
   
   lm.final <- lm(price ~ ., data = lm.agg)
   new_eq <- eq_p_q(lm.final$coefficients[2], supply, lm.final$coefficients[1], 0)
@@ -227,7 +228,7 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
   
   high_welfare <- (cs_high + high_prop * tax_revenue) / 100
   low_welfare <- (cs_low + low_prop * tax_revenue) / 100
-  ps_welfare <- ps(new_eq[2], new_eq[1])
+  ps_welfare <- ps(new_eq[2], new_eq[1]) / 100
   
   vector <- c(scc, high_welfare, low_welfare, ps_welfare)
   return(vector)
@@ -235,10 +236,15 @@ mec_change <- function(price, scc, quantity, high_prop, low_prop){
 ```
 
 ```{r}
+mec_51 <- mec_change(price, 51, q_eq, high_prop, low_prop)
 mec_75 <- mec_change(price, 75, q_eq, high_prop, low_prop)
 mec_100 <- mec_change(price, 100, q_eq, high_prop, low_prop)
 mec_125 <- mec_change(price, 125, q_eq, high_prop, low_prop)
 mec_150 <- mec_change(price, 150, q_eq, high_prop, low_prop)
-rbind(mec_1, mec_75, mec_100, mec_125, mec_150)
+mec_final <- rbind(mec_51, mec_75, mec_100, mec_125, mec_150)
+
+mec_final %>% 
+  kable(col.names = c('SCC ($/lb)', 'Welfare High Consumer ($)', 'Welfare Low Consumer ($)', 'Producer Welfare ($)')) %>% 
+  kable_styling(bootstrap_options = c('hover', 'striped'))
 ```
 
