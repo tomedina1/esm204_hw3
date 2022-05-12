@@ -249,10 +249,12 @@ mec_100 <- mec_change(price, 100, q_eq, high_prop, low_prop)
 mec_125 <- mec_change(price, 125, q_eq, high_prop, low_prop)
 mec_150 <- mec_change(price, 150, q_eq, high_prop, low_prop)
 mec_final <- rbind(mec_51, mec_75, mec_100, mec_125, mec_150) %>% 
-  as_tibble(rownames = NULL) 
+  as_tibble(rownames = NULL) %>% 
+  round(2)
 
 colnames(mec_final) <- c('SCC ($/tonne)', 'High Income Benefit ($)', 'Low Income Benefit ($)', 'Producer Surplus ($)')
-mec_final
+gt::gt(mec_final)
+
 ```
 
 #6
