@@ -261,7 +261,7 @@ mec_final <- rbind(mec_51, mec_75, mec_100, mec_125, mec_150) %>%
   round(2)
 
 colnames(mec_final) <- c('SCC ($/tonne)', 'High Income Benefit ($)', 'Low Income Benefit ($)', 'Producer Surplus ($)')
-gt::gt(mec_final)
+gt::gt(mec_final, caption = 'Table 1: Comparison of SCC values vs. Benefits to High Income, Low Income, and Producers')
 
 ```
 
@@ -311,7 +311,7 @@ tax_solar <- (mec_1/(env_ext/e_damage_tax))
 
 ```
 
-**Figure 4:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
+**Figure 3:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
 
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
