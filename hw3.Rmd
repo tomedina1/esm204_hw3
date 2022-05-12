@@ -296,7 +296,7 @@ ggplot(solar_agg) +
   scale_color_discrete(name = "Demand", labels = c("Aggregate", "High Income", "Low Income")) +
   guides(linetype = FALSE) +
   theme_minimal() +
-  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)", title = "Figure 4: Electricity Demand Curve for High Income Consumers After Solar Access")
+  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)", title = "Figure 3: Electricity Demand Curve for High Income Consumers After Solar Access")
 
 solar_aggd.lm <- solar_agg %>%
   filter(quantity_d > 30000, demand == '.')
@@ -311,7 +311,7 @@ tax_solar <- (mec_1/(env_ext/e_damage_tax))
 
 ```
 
-**Figure 4:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
+**Figure 3:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
 
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
