@@ -311,7 +311,7 @@ tax_solar <- (mec_1/(env_ext/e_damage_tax))
 
 ```
 
-**Figure 3:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
+**Figure 4:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
 
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
