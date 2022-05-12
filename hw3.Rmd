@@ -132,8 +132,6 @@ ggplot(agg_demand) +
   labs(x = "Quantity Demanded (kWh)", y = "Price (cents)", title = "Figure 1: Demand of Electricity between High and Low Income Consumers Under Status Quo") 
 ```
 
-**Figure 1:** 
-The plot shows the demand of electricity between high income and low income consumers along with the aggregated demanded curve and marginal external cost.
 
 
 ```{r}
@@ -202,8 +200,6 @@ ps_tax <- ps(new_eq[2], new_eq[1])
 tax_revenue <- e_damage_tax
 ```
 
-**Figure 2**: 
-The figure shows the demand of low and high consumers for electricity with a tax. This also shows the adjusted MEC and aggregated demand. 
 
 
 
@@ -296,7 +292,7 @@ ggplot(solar_agg) +
   scale_color_discrete(name = "Demand", labels = c("Aggregate", "High Income", "Low Income")) +
   guides(linetype = FALSE) +
   theme_minimal() +
-  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)", title = "Figure 4: Electricity Demand Curve for High Income Consumers After Solar Access")
+  labs(x = "Quantity Demanded (kWh)", y = "Price (cents)", title = "Figure 3: Electricity Demand Curve for High Income Consumers After Solar Access")
 
 solar_aggd.lm <- solar_agg %>%
   filter(quantity_d > 30000, demand == '.')
@@ -311,7 +307,6 @@ tax_solar <- (mec_1/(env_ext/e_damage_tax))
 
 ```
 
-**Figure 3:** The above figure shows the new demand curve of electricity for high income consumers after access to home solar generation. 
 
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
