@@ -140,15 +140,15 @@ p_s <- ps(10, q_eq)
 env_cost <- q_eq * mec_1
 ```
 
-- The consumer surplus of the low consumers is $`r round(cs_low,2)/ 100`.
+- The consumer surplus of the low consumers is $`r round(cs_low / 100,2)`.
 
-- The consumer surplus of the high consumers is $`r round(cs_high, 2) / 100`.
+- The consumer surplus of the high consumers is $`r round(cs_high / 100, 2) `.
 
-- The total benefit is $`r round(cs_aggr, 2) / 100`.
+- The total benefit is $`r round(cs_aggr / 100, 2)`.
 
-- The producer surplus is $`r round(p_s, 2)` cents
+- The producer surplus is $`r round(p_s / 100, 2)`.
 
-- The environmental cost under the status quo is `r round(env_cost, 2)` cents.
+- The environmental cost under the status quo is $`r round(env_cost / 100, 2)`.
 
 
 ## 3
@@ -294,6 +294,7 @@ lm.demand_agg_solar <- lm(price ~ quantity_d, data = solar_aggd.lm)
 
 solar_eq <- eq_p_q(lm.demand_agg_solar$coefficients[2], supply, lm.demand_agg_solar$coefficients[1], 0)
 env_ext <- mec_1 * solar_eq[1]
+
 ```
 
 a) The total electricity consumption is `r round(solar_eq[1],2)` kWh.
